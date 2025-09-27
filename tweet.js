@@ -1,8 +1,7 @@
 import puppeteer from "puppeteer";
 import fs from "fs";
-import dotenv from dotenv;
-
-dotenv.config(); // Or dotenv.load()
+import * as dotenv from "dotenv";
+dotenv.config();
 
 
 const USERNAME = process.env.USERNAME;

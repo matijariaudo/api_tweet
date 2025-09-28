@@ -7,7 +7,7 @@ dotenv.config();
 const USERNAME = process.env.USERNAME;
 const PASSWORD = process.env.PASSWORD;
 const SESSION_FILE = "./session.json";
-const VISIBLE=false
+const VISIBLE=true
 
 export async function tweet(TWEET_TEXT) {
     const browser = await puppeteer.launch({
@@ -33,7 +33,7 @@ export async function tweet(TWEET_TEXT) {
     let loginNeeded = false;
     try {
         await page.waitForSelector('input[autocomplete="username"]', {
-        timeout: 5000, // espera máx 5s
+        timeout: 60000, // espera máx 5s
         visible: true
         });
         loginNeeded = true;  // apareció → necesita login

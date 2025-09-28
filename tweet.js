@@ -4,8 +4,9 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 
-const USERNAME = process.env.USERNAME;
+const USERNAME = process.env.TWUSERNAME;
 const PASSWORD = process.env.PASSWORD;
+console.log(USERNAME,PASSWORD)
 const SESSION_FILE = "./session.json";
 const VISIBLE= process.env.VISIBLE === "true"
 
@@ -43,7 +44,7 @@ export async function tweet(TWEET_TEXT) {
     console.log(loginNeeded)
 
     if (loginNeeded) {
-        console.log("🔑 No hay sesión, iniciando login...");
+        console.log("🔑 No hay sesión, iniciando login-->",USERNAME);
 
         // Ir al login
         await page.goto("https://x.com/login", { waitUntil: "networkidle2" });
@@ -51,8 +52,9 @@ export async function tweet(TWEET_TEXT) {
         // Usuario
         await page.waitForSelector('input[autocomplete="username"]', { visible: true });
         await page.type('input[autocomplete="username"]', USERNAME, { delay: 50 });
+        console.log("Se ingreso usuario ",USERNAME)
         await page.keyboard.press("Enter");
-
+        
         // Password
         await page.waitForSelector('input[autocomplete="current-password"]', { visible: true });
         await page.type('input[autocomplete="current-password"]', PASSWORD, { delay: 50 });

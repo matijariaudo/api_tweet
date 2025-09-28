@@ -7,7 +7,7 @@ dotenv.config();
 const USERNAME = process.env.USERNAME;
 const PASSWORD = process.env.PASSWORD;
 const SESSION_FILE = "./session.json";
-const VISIBLE=process.env.VISIBLE
+const VISIBLE= process.env.VISIBLE === "true"
 
 export async function tweet(TWEET_TEXT) {
     const browser = await puppeteer.launch({

@@ -7,6 +7,7 @@ const PORT = 3000;
 app.get("/tweet", async (req, res) => {
   const text = req.query.text;
   console .log("Se ha recibido nuevo tweet")  
+  
   if (!text) {
     return res.status(400).json({ error: "Falta parámetro text" });
   }
@@ -27,4 +28,7 @@ app.get("/tweet", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server escuchando en http://localhost:${PORT}`);
+  setInterval(() => {
+    console.log("Server funcionando")
+  }, 5000);
 });

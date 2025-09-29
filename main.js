@@ -4,6 +4,9 @@ import { tweet } from "./tweet.js"; // tu función exportada
 const app = express();
 const PORT = 3000;
 
+// Servir archivos estáticos (screenshots)
+app.use("/shots", express.static("./")); // sirve desde la carpeta actual
+
 app.get("/tweet", async (req, res) => {
   const text = req.query.text;
   console .log("Se ha recibido nuevo tweet")  

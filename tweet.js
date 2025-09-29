@@ -33,12 +33,14 @@ export async function tweet(TWEET_TEXT) {
     console.log("Chequeando sesión...");
     let loginNeeded = false;
     try {
+        await page.screenshot({ path: "step1_home.png", fullPage: true });
         await page.waitForSelector('input[autocomplete="username"]', {
         timeout: 60000, // espera máx 5s
         visible: true
         });
         loginNeeded = true;  // apareció → necesita login
     } catch (e) {
+        await page.screenshot({ path: "step2_home.png", fullPage: true });
         loginNeeded = false; // no apareció → ya logueado
     }
     console.log(loginNeeded)
@@ -90,5 +92,6 @@ export async function tweet(TWEET_TEXT) {
         timestamp: new Date().toISOString()
     };
 }
+
 
  

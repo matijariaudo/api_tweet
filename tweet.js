@@ -44,7 +44,7 @@ export async function tweet(TWEET_TEXT) {
     // Verificar si apareció la pantalla de error
     const retryBtn = await page.$('text/Retry');
     if (retryBtn) {
-    console.log("⚠️ Página falló, reintentando con F5...");
+    console.log("⚠️ Página falló, reintentando con F5....");
     await page.reload({ waitUntil: "networkidle2" });
     await new Promise(resolve => setTimeout(resolve, 3000));
     await page.screenshot({ path: "images/step01_home.png", fullPage: true });

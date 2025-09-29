@@ -29,7 +29,7 @@ export async function tweet(TWEET_TEXT) {
     // Ir a la home
     await page.goto("https://x.com/home", { waitUntil: "networkidle2" });
         // Esperar un poco y sacar screenshot
-    await page.waitForTimeout(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
     await page.screenshot({ path: "step_home.png", fullPage: true });
 
     // Verificar si apareció la pantalla de error
@@ -37,7 +37,7 @@ export async function tweet(TWEET_TEXT) {
     if (retryBtn) {
     console.log("⚠️ Página falló, reintentando con F5...");
     await page.reload({ waitUntil: "networkidle2" });
-    await page.waitForTimeout(3000);
+    await new Promise(resolve => setTimeout(resolve, 3000));
     await page.screenshot({ path: "step_home_retry.png", fullPage: true });
     }
 

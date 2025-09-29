@@ -11,37 +11,20 @@ const SESSION_FILE = "./session.json";
 const VISIBLE= process.env.VISIBLE === "true"
 const isHeadlessNew = !VISIBLE; // si VISIBLE=false -> usamos "new" (headless)
 
-/* args comunes */
-const baseArgs = [
+const visibleArgs = [
+  "--no-sandbox",
+  "--disable-setuid-sandbox"
+];
+
+const headlessArgs = [
   "--no-sandbox",
   "--disable-setuid-sandbox",
   "--disable-dev-shm-usage",
-  "--disable-accelerated-2d-canvas",
   "--disable-gpu",
-  "--no-zygote",
-  "--single-process",
-  "--disable-background-networking",
-  "--disable-background-timer-throttling",
-  "--disable-breakpad",
-  "--disable-client-side-phishing-detection",
-  "--disable-default-apps",
-  "--disable-extensions",
-  "--disable-features=site-per-process,TranslateUI",
-  "--mute-audio",
-  "--hide-scrollbars",
-  "--disable-infobars",
-  "--disable-popup-blocking",
+  "--disable-blink-features=AutomationControlled",
   "--window-size=1280,800"
 ];
-
-const headlessExtra = [
-  // ayudan a evitar detection en algunos casos
-  "--disable-blink-features=AutomationControlled",
-  "--disable-features=IsolateOrigins,site-per-process",
-  "--enable-automation=false"
-];
-
-const launchArgs = isHeadlessNew ? baseArgs.concat(headlessExtra) : baseArgs;
+const launchArgs = VISIBLE ? visibleArgs : headlessArgs;
 
 export async function tweet(TWEET_TEXT) {
     const browser = await puppeteer.launch({
@@ -50,7 +33,23 @@ export async function tweet(TWEET_TEXT) {
     defaultViewport: { width: 1280, height: 800 }
     });
     const page = await browser.newPage();
-
+    // Ocultar señales de webdriver
+    await page.evaluateOnNewDocument(() => {
+        Object.defineProperty(navigator, 'webdriver', {
+            get: () => false,
+        });    
+        // Hacer que Chrome parezca más "humano"
+        window.navigator.chrome = {
+            runtime: {},
+        };    
+        Object.defineProperty(navigator, 'plugins', {
+            get: () => [1, 2, 3, 4, 5],
+        });
+    });
+    // User-Agent realista
+    await page.setUserAgent(
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+    );
     // Intentar cargar cookies previas
     if (fs.existsSync(SESSION_FILE)) {
         const cookies = JSON.parse(fs.readFileSync(SESSION_FILE, "utf-8"));

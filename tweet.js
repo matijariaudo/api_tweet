@@ -7,29 +7,24 @@ dotenv.config();
 const USERNAME = process.env.TWUSERNAME;
 const PASSWORD = process.env.PASSWORD;
 console.log(USERNAME,PASSWORD)
-const SESSION_FILE = "./session.json";
+const SESSION_FILE = "./session.json"   ;
 const VISIBLE= process.env.VISIBLE === "true"
-const isHeadlessNew = !VISIBLE; // si VISIBLE=false -> usamos "new" (headless)
+const HEADLESS = !VISIBLE; // true cuando no quiero ver nada (AWS)
 
-const visibleArgs = [
-  "--no-sandbox",
-  "--disable-setuid-sandbox"
-];
-
-const headlessArgs = [
-  "--no-sandbox",
-  "--disable-setuid-sandbox",
-  "--disable-dev-shm-usage",
-  "--disable-gpu",
-  "--disable-blink-features=AutomationControlled",
-  "--window-size=1280,800"
-];
-const launchArgs = VISIBLE ? visibleArgs : headlessArgs;
 
 export async function tweet(TWEET_TEXT) {
     const browser = await puppeteer.launch({
-    headless: isHeadlessNew ? "new" : false,
-    args: launchArgs,
+    headless: HEADLESS,
+    args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--no-zygote",
+        "--single-process",
+        "--disable-extensions",
+        "--window-size=1280,800"
+    ],
     defaultViewport: { width: 1280, height: 800 }
     });
     const page = await browser.newPage();

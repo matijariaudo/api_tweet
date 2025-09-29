@@ -83,7 +83,7 @@ export async function tweet(TWEET_TEXT) {
             await new Promise(resolve => setTimeout(resolve, 5000));
             await page.screenshot({ path: "images/step4_home.png", fullPage: true });
             console.log("captura4")
-            await page.waitForSelector('input[data-testid="ocfEnterTextTextInput"]', { visible: true ,timeout: 2000});
+            await page.waitForSelector('input[data-testid="ocfEnterTextTextInput"]', { visible: true ,timeout: 60000});
             await page.type('input[data-testid="ocfEnterTextTextInput"]', EMAIL, { delay: 50 });
             await page.keyboard.press("Enter");
         } catch (e) {

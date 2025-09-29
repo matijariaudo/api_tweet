@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+
 import fs from "fs";
 import * as dotenv from "dotenv";
 dotenv.config();

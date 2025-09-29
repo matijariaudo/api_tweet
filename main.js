@@ -31,7 +31,4 @@ app.get("/tweet", async (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`🚀 Server escuchando en http://localhost:${PORT}`);
-  setInterval(() => {
-    console.log("Server funcionando")
-  }, 5000);
 });

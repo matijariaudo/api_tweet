@@ -9,14 +9,45 @@ const PASSWORD = process.env.PASSWORD;
 console.log(USERNAME,PASSWORD)
 const SESSION_FILE = "./session.json";
 const VISIBLE= process.env.VISIBLE === "true"
+const isHeadlessNew = !VISIBLE; // si VISIBLE=false -> usamos "new" (headless)
+
+/* args comunes */
+const baseArgs = [
+  "--no-sandbox",
+  "--disable-setuid-sandbox",
+  "--disable-dev-shm-usage",
+  "--disable-accelerated-2d-canvas",
+  "--disable-gpu",
+  "--no-zygote",
+  "--single-process",
+  "--disable-background-networking",
+  "--disable-background-timer-throttling",
+  "--disable-breakpad",
+  "--disable-client-side-phishing-detection",
+  "--disable-default-apps",
+  "--disable-extensions",
+  "--disable-features=site-per-process,TranslateUI",
+  "--mute-audio",
+  "--hide-scrollbars",
+  "--disable-infobars",
+  "--disable-popup-blocking",
+  "--window-size=1280,800"
+];
+
+const headlessExtra = [
+  // ayudan a evitar detection en algunos casos
+  "--disable-blink-features=AutomationControlled",
+  "--disable-features=IsolateOrigins,site-per-process",
+  "--enable-automation=false"
+];
+
+const launchArgs = isHeadlessNew ? baseArgs.concat(headlessExtra) : baseArgs;
 
 export async function tweet(TWEET_TEXT) {
     const browser = await puppeteer.launch({
-    headless: VISIBLE ? false : "new", // o true → no abre ventana
-    args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox"
-    ]
+    headless: isHeadlessNew ? "new" : false,
+    args: launchArgs,
+    defaultViewport: { width: 1280, height: 800 }
     });
     const page = await browser.newPage();
 

@@ -93,7 +93,7 @@ export async function tweet(TWEET_TEXT) {
         await new Promise(resolve => setTimeout(resolve, 2000));
         await page.screenshot({ path: "images/step5_home.png", fullPage: true });
         console.log("captura5")
-        await page.waitForSelector('input[autocomplete="current-password"]', { visible: true });
+        await page.waitForSelector('input[autocomplete="current-password"]', { visible: true ,timeout: 60000});
         await page.type('input[autocomplete="current-password"]', PASSWORD, { delay: 50 });
         await page.keyboard.press("Enter");
         await page.waitForNavigation({ waitUntil: "networkidle2" });

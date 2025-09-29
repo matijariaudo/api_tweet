@@ -73,14 +73,16 @@ export async function tweet(TWEET_TEXT) {
         // Usuario
         await new Promise(resolve => setTimeout(resolve, 2000));
         await page.screenshot({ path: "images/step3_home.png", fullPage: true });
+        console.log("captura3")
         await page.waitForSelector('input[autocomplete="username"]', { visible: true });
         await page.type('input[autocomplete="username"]', USERNAME, { delay: 50 });
         console.log("Se ingreso usuario ",USERNAME)
         await page.keyboard.press("Enter");
         try {
             // espera a que aparezca el input de email/teléfono/usuario
-            await new Promise(resolve => setTimeout(resolve, 2000));
+            await new Promise(resolve => setTimeout(resolve, 5000));
             await page.screenshot({ path: "images/step4_home.png", fullPage: true });
+            console.log("captura4")
             await page.waitForSelector('input[data-testid="ocfEnterTextTextInput"]', { visible: true ,timeout: 2000});
             await page.type('input[data-testid="ocfEnterTextTextInput"]', EMAIL, { delay: 50 });
             await page.keyboard.press("Enter");
@@ -90,6 +92,7 @@ export async function tweet(TWEET_TEXT) {
         // Password
         await new Promise(resolve => setTimeout(resolve, 2000));
         await page.screenshot({ path: "images/step5_home.png", fullPage: true });
+        console.log("captura5")
         await page.waitForSelector('input[autocomplete="current-password"]', { visible: true });
         await page.type('input[autocomplete="current-password"]', PASSWORD, { delay: 50 });
         await page.keyboard.press("Enter");

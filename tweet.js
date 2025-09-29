@@ -65,20 +65,20 @@ export async function tweet(TWEET_TEXT) {
         loginNeeded = false; // no apareció → ya logueado
     }
     console.log(loginNeeded)
-
     if (loginNeeded) {
         console.log("🔑 No hay sesión, iniciando login-->",USERNAME);
-
         // Ir al login
-        await page.goto("https://x.com/login", { waitUntil: "networkidle2" });
-
+        //await page.goto("https://x.com/login", { waitUntil: "networkidle2" });
         // Usuario
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await page.screenshot({ path: "images/step3_home.png", fullPage: true });
         await page.waitForSelector('input[autocomplete="username"]', { visible: true });
         await page.type('input[autocomplete="username"]', USERNAME, { delay: 50 });
         console.log("Se ingreso usuario ",USERNAME)
         await page.keyboard.press("Enter");
-        
         // Password
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        await page.screenshot({ path: "images/step4_home.png", fullPage: true });
         await page.waitForSelector('input[autocomplete="current-password"]', { visible: true });
         await page.type('input[autocomplete="current-password"]', PASSWORD, { delay: 50 });
         await page.keyboard.press("Enter");

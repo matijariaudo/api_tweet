@@ -9,8 +9,9 @@ puppeteer.use(StealthPlugin());
 
 
 const USERNAME = "@btcnews_es";
+const EMAIL = process.env.TWUSERNAME;
 const PASSWORD = process.env.PASSWORD;
-console.log(USERNAME,PASSWORD)
+console.log(USERNAME,PASSWORD,EMAIL)
 const SESSION_FILE = "./session.json"   ;
 
 
@@ -76,13 +77,22 @@ export async function tweet(TWEET_TEXT) {
         await page.type('input[autocomplete="username"]', USERNAME, { delay: 50 });
         console.log("Se ingreso usuario ",USERNAME)
         await page.keyboard.press("Enter");
+        try {
+            // espera a que aparezca el input de email/teléfono/usuario
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            await page.screenshot({ path: "images/step4_home.png", fullPage: true });
+            await page.waitForSelector('input[data-testid="ocfEnterTextTextInput"]', { visible: true ,timeout: 2000});
+            await page.type('input[data-testid="ocfEnterTextTextInput"]', EMAIL, { delay: 50 });
+            await page.keyboard.press("Enter");
+        } catch (e) {
+            console.error("No apareció el input de verificación extra:", e);
+        }
         // Password
         await new Promise(resolve => setTimeout(resolve, 2000));
-        await page.screenshot({ path: "images/step4_home.png", fullPage: true });
+        await page.screenshot({ path: "images/step5_home.png", fullPage: true });
         await page.waitForSelector('input[autocomplete="current-password"]', { visible: true });
         await page.type('input[autocomplete="current-password"]', PASSWORD, { delay: 50 });
         await page.keyboard.press("Enter");
-
         await page.waitForNavigation({ waitUntil: "networkidle2" });
     } else {
         console.log("👌 Sesión activa, no se requiere login.");

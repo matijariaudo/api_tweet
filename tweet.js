@@ -2,19 +2,22 @@ import puppeteer from "puppeteer";
 import fs from "fs";
 import * as dotenv from "dotenv";
 dotenv.config();
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+
+puppeteer.use(StealthPlugin());
 
 
-const USERNAME = process.env.TWUSERNAME;
+const USERNAME = "@btcnews_es";
 const PASSWORD = process.env.PASSWORD;
 console.log(USERNAME,PASSWORD)
 const SESSION_FILE = "./session.json"   ;
-const VISIBLE= process.env.VISIBLE === "true"
-const HEADLESS = !VISIBLE; // true cuando no quiero ver nada (AWS)
+
 
 
 export async function tweet(TWEET_TEXT) {
     const browser = await puppeteer.launch({
-    headless: HEADLESS,
+    headless: "new",
     args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
@@ -24,28 +27,9 @@ export async function tweet(TWEET_TEXT) {
         "--single-process",
         "--disable-extensions",
         "--window-size=1280,800"
-    ],
-    defaultViewport: { width: 1280, height: 800 }
+    ]
     });
     const page = await browser.newPage();
-    // Ocultar señales de webdriver
-    await page.evaluateOnNewDocument(() => {
-        Object.defineProperty(navigator, 'webdriver', {
-            get: () => false,
-        });    
-        // Hacer que Chrome parezca más "humano"
-        window.navigator.chrome = {
-            runtime: {},
-        };    
-        Object.defineProperty(navigator, 'plugins', {
-            get: () => [1, 2, 3, 4, 5],
-        });
-    });
-    // User-Agent realista
-    await page.setUserAgent(
-    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
-    );
-    // Intentar cargar cookies previas
     if (fs.existsSync(SESSION_FILE)) {
         const cookies = JSON.parse(fs.readFileSync(SESSION_FILE, "utf-8"));
         await page.setCookie(...cookies);
@@ -55,7 +39,7 @@ export async function tweet(TWEET_TEXT) {
     await page.goto("https://x.com/home", { waitUntil: "networkidle2" });
         // Esperar un poco y sacar screenshot
     await new Promise(resolve => setTimeout(resolve, 1000));
-    await page.screenshot({ path: "step_home.png", fullPage: true });
+    await page.screenshot({ path: "images/step0_home.png", fullPage: true });
 
     // Verificar si apareció la pantalla de error
     const retryBtn = await page.$('text/Retry');
@@ -63,21 +47,21 @@ export async function tweet(TWEET_TEXT) {
     console.log("⚠️ Página falló, reintentando con F5...");
     await page.reload({ waitUntil: "networkidle2" });
     await new Promise(resolve => setTimeout(resolve, 3000));
-    await page.screenshot({ path: "step_home_retry.png", fullPage: true });
+    await page.screenshot({ path: "images/step01_home.png", fullPage: true });
     }
 
     // Verificar si pide login (no hay sesión válida)
     console.log("Chequeando sesión...");
     let loginNeeded = false;
     try {
-        await page.screenshot({ path: "step1_home.png", fullPage: true });
+        await page.screenshot({ path: "images/step1_home.png", fullPage: true });
         await page.waitForSelector('input[autocomplete="username"]', {
         timeout: 60000, // espera máx 5s
         visible: true
         });
         loginNeeded = true;  // apareció → necesita login
     } catch (e) {
-        await page.screenshot({ path: "step2_home.png", fullPage: true });
+        await page.screenshot({ path: "images/step2_home.png", fullPage: true });
         loginNeeded = false; // no apareció → ya logueado
     }
     console.log(loginNeeded)

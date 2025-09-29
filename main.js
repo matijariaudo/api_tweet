@@ -5,7 +5,7 @@ const app = express();
 const PORT = 3000;
 
 // Servir archivos estáticos (screenshots)
-app.use("/shots", express.static("./")); // sirve desde la carpeta actual
+app.use("/shots", express.static("./images/")); // sirve desde la carpeta actual
 
 app.get("/tweet", async (req, res) => {
   const text = req.query.text;
